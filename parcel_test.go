@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	_ "modernc.org/sqlite"
 )
 
@@ -193,9 +194,7 @@ func TestGetByClient(t *testing.T) {
 	}
 
 	// Проверка, что количество полученных посылок совпадает с количеством добавленных
-	if len(storedParcels) != len(parcels) {
-		t.Fatalf("Expected %d parcels, got %d", len(parcels), len(storedParcels))
-	}
+	assert.Len(t, storedParcels, len(parcels), "Expected %d parcels, got %d", len(parcels), len(storedParcels))
 
 	// Проверка, что все посылки из storedParcels есть в parcelMap и что значения полей верны
 	for _, parcel := range storedParcels {

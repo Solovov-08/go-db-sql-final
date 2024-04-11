@@ -62,6 +62,7 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 		return res, err
 	}
 	// Заполняем срез Parcel данными из таблицы
+	defer rows.Close()
 	for rows.Next() {
 		var pbox Parcel
 
@@ -72,7 +73,6 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 		}
 		res = append(res, pbox)
 	}
-	defer rows.Close()
 
 	return res, nil
 }
