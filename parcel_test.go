@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/stretchr/testify/require"
 	_ "modernc.org/sqlite"
 )
 
@@ -177,7 +176,6 @@ func TestGetByClient(t *testing.T) {
 
 	// Добавление
 	for i := 0; i < len(parcels); i++ {
-		fmt.Println(parcels[i])
 		// Добавляем новую посылку в базу данных
 		id, err := store.Add(parcels[i])
 		if err != nil {
@@ -193,7 +191,6 @@ func TestGetByClient(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error getting parcels by client: %v", err)
 	}
-	fmt.Println(storedParcels)
 
 	// Проверка, что количество полученных посылок совпадает с количеством добавленных
 	if len(storedParcels) != len(parcels) {

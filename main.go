@@ -97,16 +97,18 @@ func (s ParcelService) Delete(number int) error {
 }
 
 func main() {
-	// настройте подключение к БД
+	// Настроили подключение к БД
 	db, err := sql.Open("sqlite", "tracker.db")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	store := NewParcelStore(db) // создайте объект ParcelStore функцией NewParcelStore
+	defer db.Close()
+
+	store := NewParcelStore(db)
 	service := NewParcelService(store)
 
-	// регистрация посылки
+	// Регистрируем посылку посылки
 	client := 1
 	address := "Псков, д. Пушкина, ул. Колотушкина, д. 5"
 	p, err := service.Register(client, address)
@@ -115,7 +117,7 @@ func main() {
 		return
 	}
 
-	// изменение адреса
+	// Изменяем адрес адреса
 	newAddress := "Саратов, д. Верхние Зори, ул. Козлова, д. 25"
 	err = service.ChangeAddress(p.Number, newAddress)
 	if err != nil {
@@ -123,28 +125,28 @@ func main() {
 		return
 	}
 
-	// изменение статуса
+	// Изменяем статус
 	err = service.NextStatus(p.Number)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// вывод посылок клиента
+	// Выводим посылоки клиента
 	err = service.PrintClientParcels(client)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// попытка удаления отправленной посылки
+	// Пытаемся удалить отправленную посылку
 	err = service.Delete(p.Number)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// вывод посылок клиента
+	// Вывод посылок клиента
 	// предыдущая посылка не должна удалиться, т.к. её статус НЕ «зарегистрирована»
 	err = service.PrintClientParcels(client)
 	if err != nil {
@@ -152,21 +154,21 @@ func main() {
 		return
 	}
 
-	// регистрация новой посылки
+	// Региструем новую посылку
 	p, err = service.Register(client, address)
 	if err != nil {
 		fmt.Println("Ошибка регистрации", err)
 		return
 	}
 
-	// удаление новой посылки
+	// Удаляем новую посылку
 	err = service.Delete(p.Number)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// вывод посылок клиента
+	// Вывод посылок клиента
 	// здесь не должно быть последней посылки, т.к. она должна была успешно удалиться
 	err = service.PrintClientParcels(client)
 	if err != nil {
